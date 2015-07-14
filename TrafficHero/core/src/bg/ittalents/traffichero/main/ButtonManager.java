@@ -2,82 +2,97 @@ package bg.ittalents.traffichero.main;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+
+import bg.ittalents.traffichero.network.LoginRequest;
 import bg.ittalents.traffichero.screen.*;
 
 public class ButtonManager {
-    public final static Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"));
-    bg.ittalents.traffichero.main.TextFieldManager fieldManager = new bg.ittalents.traffichero.main.TextFieldManager();
-    private static boolean isBackgroundMusicOn = true;
-    private static boolean isButtonSoundOn ;
 
+
+    private TextFieldManager fieldManager = new TextFieldManager();
+    private static boolean receivesEmailNotifications;
     public ButtonManager() {
 
     }
 
-    public static boolean isBackgroundMusicOn() {
-        return isBackgroundMusicOn;
+    public static boolean isReceivesEmailNotifications() {
+        return receivesEmailNotifications;
     }
 
-    public static void setIsBackgroundMusicOn(boolean isBackgroundMusicOn) {
-        ButtonManager.isBackgroundMusicOn = isBackgroundMusicOn;
+    public static void setReceivesEmailNotifications(boolean receivesEmailNotifications) {
+        ButtonManager.receivesEmailNotifications = receivesEmailNotifications;
     }
 
-    public static boolean isButtonSoundOn() {
-        return isButtonSoundOn;
-    }
 
-    public static void setIsButtonSoundOn(boolean isButtonSoundOn) {
-        bg.ittalents.traffichero.main.ButtonManager.isButtonSoundOn = isButtonSoundOn;
-    }
-
+    //Creating Buttons For LoginScreen
     public TextButton loginButtons(String buttonName) {
-
-        if (buttonName.equals("Login")) {
-        TextButton loginButton = new TextButton("Login",skin);
+        if (buttonName.equals("loginButton")) {
+            TextButton loginButton = new TextButton("Login",Constants.skin);
+            loginButton.addAction(Actions.alpha(Constants.DEFAULT_ALPHA));
             loginButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    if(bg.ittalents.traffichero.main.TextFieldManager.getUsernameLogin().getText().length() < UpdateUserPassword.MIN_PASSWORD_USERNAME_AND_NICKNAME_LENGHT){
+                    new LoginRequest(TextFieldManager.getUsernameLogin().getText(), TextFieldManager.getPasswordLogin().getText());
+                    boolean  validation = false;
+                    MainScreen.getGreetingLabel().setText(TextFieldManager.getUsernameLogin().getText());
+                    if(TextFieldManager.getUsernameLogin().getText().length() < Constants.MIN_PASSWORD_USERNAME_AND_NICKNAME_LENGTH) {
                         fieldManager.setUsernameInvalidInput();
-
-                    if(TextFieldManager.getPasswordLogin().getText().length() < UpdateUserPassword.MIN_PASSWORD_USERNAME_AND_NICKNAME_LENGHT) {
+                        validation = false;
+                    }if(TextFieldManager.getPasswordLogin().getText().length() < Constants.MIN_PASSWORD_USERNAME_AND_NICKNAME_LENGTH) {
                         fieldManager.setPasswordInvalidInput();
-                    }}else{
-                        ((Game)Gdx.app.getApplicationListener()).setScreen(new MenuAfterLogin());
+                    }
+                    else  if(validation) {
+                        MainScreen.getGreetingLabel().setText("Welcome " + TextFieldManager.getUsernameLogin().getText());
+                        ((Game) Gdx.app.getApplicationListener()).setScreen(new MainScreen());
                     }
                 }
             });
             return loginButton;
-        } else if (buttonName.equals("Registration")){
-            TextButton registrationButton = new TextButton("Registration",skin);
+        } else if (buttonName.equals("registrationButton")){
+            TextButton registrationButton = new TextButton("Registration",Constants.skin);
+            registrationButton.addAction(Actions.alpha(Constants.DEFAULT_ALPHA));
             registrationButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     ((Game) Gdx.app.getApplicationListener()).setScreen(new RegistrationScreen());
                 }
             });
-        return registrationButton;
-    }else if (buttonName.equals("Register")) {
-            TextButton regButton = new TextButton("Register",skin);
-                regButton.addListener(new ChangeListener() {
-                    @Override
-                    public void changed(ChangeEvent event, Actor actor) {
-                        ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuAfterLogin());
+            return registrationButton;
+        }else if (buttonName.equals("registerButton")) {
+            TextButton regButton = new TextButton("Register",Constants.skin);
+            regButton.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    ((Game) Gdx.app.getApplicationListener()).setScreen(new MainScreen());
+                }
+            });
+            return regButton;
+        }else if(buttonName.equals("playOffline")){
+            TextButton playOfflineButton = new TextButton("Play Offline",Constants.skin);
+            playOfflineButton.addAction(Actions.alpha(Constants.CUSTOM_ALPHA));
+            playOfflineButton.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    if(LoginScreen.getBackgroundMusic()!= null) {
+                        LoginScreen.getBackgroundMusic().pause();
                     }
-                });
-                return regButton;
-            }
-            return null;
+                    ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(50));
+                }
+            });
+            return playOfflineButton;
         }
+        return null;
+    }
     public TextButton afterLoginScreenButtons(String buttonName) {
         if (buttonName.equals("Play")) {
-            TextButton playButton = new TextButton("Play",skin);
+            TextButton playButton = new TextButton("PLAY",Constants.skin);
+
+            playButton.addAction(Actions.alpha(Constants.DEFAULT_ALPHA));
             playButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
@@ -87,61 +102,63 @@ public class ButtonManager {
             });
             return playButton;
         } else if (buttonName.equals("Change Profile")) {
-            TextButton changeProfileButton= new TextButton("Change Profile",skin);
+            TextButton changeProfileButton= new TextButton("CHANGE PROFILE",Constants.skin);
+            changeProfileButton.addAction(Actions.alpha(Constants.DEFAULT_ALPHA));
             changeProfileButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    ((Game) Gdx.app.getApplicationListener()).setScreen(new SettingsScreen());
+                    ((Game) Gdx.app.getApplicationListener()).setScreen(new ChangeProfileScreen());
                 }
             });
             return changeProfileButton;
         } else if (buttonName.equals("HeightScore")) {
-            TextButton heightScoreButton= new TextButton("HeightScore",skin);
+            TextButton heightScoreButton= new TextButton("HIGH SCORE",Constants.skin);
+            heightScoreButton.addAction(Actions.alpha(Constants.DEFAULT_ALPHA));
             heightScoreButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    ((Game) Gdx.app.getApplicationListener()).setScreen(new HeightScoreScreen());
+                    ((Game) Gdx.app.getApplicationListener()).setScreen(new HighScoreScreen());
                 }
             });
             return heightScoreButton;
-        } else if (buttonName.equals("Logout")) {
-            TextButton logoutButton= new TextButton("Logout",skin);
-            logoutButton.addListener(new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent event, Actor actor) {
-                    ((Game) Gdx.app.getApplicationListener()).setScreen(new LoginScreen());
-                }
-            });
-            return logoutButton;
         }
         return null;
     }
 
     public TextButton levelButtons(String buttonName) {
         if (buttonName.equals("Level 1")) {
-            TextButton levelOneButton = new TextButton("Level 1",skin);
+            TextButton levelOneButton = new TextButton("Level 1",Constants.skin);
+            levelOneButton.addAction(Actions.alpha(Constants.DEFAULT_ALPHA));
             levelOneButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen());
+                    if(LoginScreen.getBackgroundMusic()!= null) {
+                        LoginScreen.getBackgroundMusic().pause();
+                    }
+                    ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(50));
                 }
             });
             return levelOneButton;
         } else if (buttonName.equals("Level 2")) {
-            TextButton levelTwoButton = new TextButton("Login",skin);
+            TextButton levelTwoButton = new TextButton("Level 2",Constants.skin);
+            levelTwoButton.addAction(Actions.alpha(Constants.DEFAULT_ALPHA));
             levelTwoButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    ((Game) Gdx.app.getApplicationListener()).setScreen(new LoginScreen());
+
+                    LoginScreen.getBackgroundMusic().pause();
+                    ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(65));
                 }
             });
             return levelTwoButton;
         } else if (buttonName.equals("Level 3")) {
-            TextButton levelThreeButton = new TextButton("Login",skin);
+            TextButton levelThreeButton = new TextButton("Level 3",Constants.skin);
+            levelThreeButton.addAction(Actions.alpha(Constants.DEFAULT_ALPHA));
             levelThreeButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    ((Game) Gdx.app.getApplicationListener()).setScreen(new LoginScreen());
+                    LoginScreen.getBackgroundMusic().pause();
+                    ((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(75));
                 }
             });
             return levelThreeButton;
@@ -151,7 +168,8 @@ public class ButtonManager {
 
     public TextButton settingsScreenButtons(String buttonName) {
         if (buttonName.equals("Change Nickname")) {
-            TextButton changeNicknameButton = new TextButton(" Change\nNickname", skin);
+            TextButton changeNicknameButton = new TextButton(" Change\nNickname", Constants.skin);
+            changeNicknameButton.addAction(Actions.alpha(Constants.DEFAULT_ALPHA));
             changeNicknameButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
@@ -162,11 +180,12 @@ public class ButtonManager {
             return changeNicknameButton;
         }
         {
-            TextButton changePassButton = new TextButton(" Change\nPassword", skin);
+            TextButton changePassButton = new TextButton(" Change\nPassword", Constants.skin);
+            changePassButton.addAction(Actions.alpha(Constants.DEFAULT_ALPHA));
             changePassButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    ((Game) Gdx.app.getApplicationListener()).setScreen(new UpdateUserPassword());
+                    ((Game) Gdx.app.getApplicationListener()).setScreen(new ChangeUserPassword());
                 }
             });
             return changePassButton;
@@ -175,47 +194,35 @@ public class ButtonManager {
 
 
 
-    public CheckBox settingsScreenCheckBoxes(String checkBoxName){
-        if(checkBoxName.equals("Send email if somebody beat your HeightScore?")){
-            final CheckBox emailCheckBox = new CheckBox("Send email if somebody\n beat your HeightScore?", skin);
+    public CheckBox settingsScreenCheckBoxes(final String checkBoxName){
+        if(checkBoxName.equals("emailCheckbox")){
+            final CheckBox emailCheckBox = new CheckBox("Send email if somebody\n beat your HeightScore?", Constants.skin);
 
             emailCheckBox.setChecked(true);
-            emailCheckBox.setColor(Color.BLUE);
-
             emailCheckBox.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    if(emailCheckBox.isChecked()){
-
+                    if (emailCheckBox.isChecked()){
+                        setReceivesEmailNotifications(true);
+                    }else{
+                        setReceivesEmailNotifications(false);
                     }
                 }
             });
             return emailCheckBox;
         }
-        if(checkBoxName.equals("Sounds Effect")){
-            final CheckBox soundEffectCheckBox= new CheckBox("Sounds Effect", skin);
-            soundEffectCheckBox.setChecked(true);
-            soundEffectCheckBox.addListener(new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent event, Actor actor) {
-                    if(soundEffectCheckBox.isChecked()){
-                        setIsButtonSoundOn(true);
-                    }else{
-                        setIsButtonSoundOn(false);
-                    }
-                }
-            });
-            return soundEffectCheckBox;
-        }if(checkBoxName.equals("Background music")){
-            final CheckBox backgroundMusicCheckBox= new CheckBox("Background Music", skin);
+        if(checkBoxName.equals("backgroundCheckbox")){
+            final CheckBox backgroundMusicCheckBox= new CheckBox("Background Music", Constants.skin);
             backgroundMusicCheckBox.setChecked(true);
             backgroundMusicCheckBox.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    if(backgroundMusicCheckBox.isChecked()){
-                        setIsBackgroundMusicOn(true);
-                    }else{
-                        setIsBackgroundMusicOn(false);
+                    if (backgroundMusicCheckBox.isChecked()) {
+                        LoginScreen.getBackgroundMusic().play();
+
+                    } else {
+                        LoginScreen.getBackgroundMusic().pause();
+
                     }
                 }
             });
@@ -223,6 +230,4 @@ public class ButtonManager {
         }
         return null;
     }
-
-
 }

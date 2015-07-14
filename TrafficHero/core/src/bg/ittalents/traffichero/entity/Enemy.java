@@ -8,11 +8,12 @@ public class Enemy extends Entity {
 
     private int spawnPosition;
     private int lastSpawnPosition;
+    private boolean nearMissed = false;
 
     public Enemy() {
         super(TextureManager.ENEMY[MathUtils.random(0, TextureManager.ENEMY.length - 1)]);
-        setWidth(Constants.SCREEN_WIDTH / 6);
-        setHeight(Constants.SCREEN_WIDTH / 3);
+        setWidth(Constants.SCREEN_WIDTH / Constants.PLAYER_TEXTURE_WIDTH_DIVIDER);
+        setHeight(Constants.SCREEN_WIDTH / Constants.PLAYER_TEXTURE_HEIGHT_DIVIDER);
         spawnPosition = MathUtils.random(0, Constants.ENEMY_SPAWN_POINT.length - 1);
         if (spawnPosition == lastSpawnPosition) {
             spawnPosition = MathUtils.random(0, Constants.ENEMY_SPAWN_POINT.length - 1);
@@ -23,5 +24,13 @@ public class Enemy extends Entity {
 
     public void update() {
         setY(getY() - MathUtils.random(Constants.ENEMY_MIN_MOVE_RATE, Constants.ENEMY_MAX_MOVE_RATE));
+    }
+
+    public void setNearMissed() {
+        nearMissed = true;
+    }
+
+    public boolean getNearMissed() {
+        return nearMissed;
     }
 }

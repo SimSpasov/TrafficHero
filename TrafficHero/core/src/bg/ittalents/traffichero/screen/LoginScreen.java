@@ -15,8 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import bg.ittalents.traffichero.main.ButtonManager;
+import bg.ittalents.traffichero.main.Constants;
 import bg.ittalents.traffichero.main.TextFieldManager;
-import bg.ittalents.traffichero.main.UpdateUserPassword;
 
 public class LoginScreen implements Screen,Input.TextInputListener{
     ButtonManager buttonManager = new ButtonManager();
@@ -24,75 +24,72 @@ public class LoginScreen implements Screen,Input.TextInputListener{
     private Table table;
     private Label heading;
     private SpriteBatch batch;
-    private Sprite background;
-    private float time = 0.0f;
-    private Sound clickSound;
-    private boolean isTrue = true;
-    private Music backgroundMusic;
-    public LoginScreen() {
-    }
+    private Texture backgroundTexture;
+    private static Music backgroundMusic;
+    private static boolean onlyOnce = true;
+    public static Label statusLabel = new Label("",Constants.skin);
+    private TextFieldManager tm = new TextFieldManager();
+
+    public LoginScreen() {}
+
     @Override
     public void show() {
-         stage = new Stage();
+        stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         Gdx.input.setCatchBackKey(true);
-
-
-
-        heading = new Label("TITLE", new Label.LabelStyle(new BitmapFont(Gdx.files.internal("fonts/white.fnt")), Color.WHITE));
-        table = new Table(ButtonManager.skin);
+        heading = new Label("TRAFFIC HERO 2D", new Label.LabelStyle(new BitmapFont(Gdx.files.internal("data/50white.fnt")), Color.WHITE));
+        table = new Table(Constants.skin);
         table.setFillParent(true);
-        if(isTrue){
-            isTrue = false;
-            mainTable();
-        }
         stage.addActor(table);
-//        Creating moving background
+
+        mainTable();
+
         batch = new SpriteBatch();
-        Texture texture = new Texture("bg-road.png");
-        texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-        background = new Sprite(texture);
-        background.setAlpha(100);
-        background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        backgroundTexture = new Texture(Gdx.files.internal("backgroundRoad.jpg"));
 
     }
-    private void backgroundMusic() {
-////        clickSound = Gdx.audio.newSound(Gdx.files.internal("sounds/click.wav.wav"));
-//       if(buttonManager.isBackgroundMusicOn()) {
-//           backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/backgroundMusic.mp3"));
-//           backgroundMusic.setLooping(true);
-//           backgroundMusic.play();
-//       }
+
+
+    //    Creating moving background
+    public void backgroundMusic() {
+        setBackgroundMusic(Gdx.audio.newMusic(Gdx.files.internal("sounds/backgroundMusic.mp3")));
+        getBackgroundMusic().setLooping(true);
+        getBackgroundMusic().play();
     }
-TextFieldManager tm = new TextFieldManager();
+
     public void mainTable(){
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         Table newTable = new Table();
+        Table table2 = new Table();
+        newTable.add(statusLabel).row();
         newTable.add(heading).pad(25).row();
-        newTable.add(tm.loginScreenTextFields("usernameLogin")).center().fill(true, false).size(Gdx.graphics.getWidth() / 2f, UpdateUserPassword.DEFAULT_TEXT_FIELD_HEIGHT).pad(UpdateUserPassword.DEFAULT_PADDING).row();
-        newTable.add(tm.loginScreenTextFields("passwordLogin")).center().fill(true, false).size(Gdx.graphics.getWidth() / 2f, UpdateUserPassword.DEFAULT_TEXT_FIELD_HEIGHT).pad(UpdateUserPassword.DEFAULT_PADDING).row();
-        newTable.add(buttonManager.loginButtons("Login")).size(Gdx.graphics.getWidth() / 3f, UpdateUserPassword.DEFAULT_BUTTON_HEIGHT);
-        newTable.add(buttonManager.loginButtons("Registration")).size(Gdx.graphics.getWidth() / 3f, UpdateUserPassword.DEFAULT_BUTTON_HEIGHT);
+        newTable.add(tm.loginScreenTextFields("usernameLogin")).size(Constants.DEFAULT_TEXT_FIELD_WIDTH,
+                Constants.DEFAULT_TEXT_FIELD_HEIGHT).pad(Constants.DEFAULT_PADDING).row();
+        newTable.add(tm.loginScreenTextFields("passwordLogin")).size(Constants.DEFAULT_TEXT_FIELD_WIDTH,
+                Constants.DEFAULT_TEXT_FIELD_HEIGHT).pad(Constants.DEFAULT_PADDING).row();
+        table2.add(buttonManager.loginButtons("loginButton")).size(Constants.DEFAULT_BUTTON_WIDTH,
+                Constants.DEFAULT_BUTTON_HEIGHT).pad(Constants.DEFAULT_PADDING);
+        table2.add(buttonManager.loginButtons("registrationButton")).size(Constants.DEFAULT_BUTTON_WIDTH,
+                Constants.DEFAULT_BUTTON_HEIGHT).pad(Constants.DEFAULT_PADDING);
+        newTable.add(table2).row();
+        newTable.add(buttonManager.loginButtons("playOffline")).size(Constants.DEFAULT_BUTTON_WIDTH,
+                Constants.DEFAULT_BUTTON_HEIGHT).pad(Constants.DEFAULT_PADDING);
         newTable.setFillParent(true);
-        newTable.debug();
-        backgroundMusic();
+        if(onlyOnce) {
+            onlyOnce = false;
+            backgroundMusic();
+        }
         stage.addActor(newTable);
-
     }
+
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(delta);
-        this.time +=Gdx.graphics.getDeltaTime();
-
-        if(time>1f)
-            time = 0.0f;
-        background.setV2(time);
-        background.setV(time + 2.4f);
         batch.begin();
-        background.draw(batch);
+        batch.draw(backgroundTexture,0,0,Constants.SCREEN_WIDTH,Constants.SCREEN_HEIGHT);
         batch.end();
         stage.draw();
     }
@@ -100,24 +97,33 @@ TextFieldManager tm = new TextFieldManager();
     @Override
     public void resize(int width, int height) {}
     @Override
-    public void pause() {}
+    public void pause() {
+
+    }
     @Override
-    public void resume() {}
+    public void resume() {
+
+    }
     @Override
     public void hide() {
-
-
-//        dispose();
+        dispose();
     }
 
     @Override
     public void dispose() {
-//        stage.dispose();
-//        uiSkin.dispose();
-
+        stage.dispose();
     }
     @Override
     public void input(String text) {}
     @Override
     public void canceled() {}
+
+    public static Music getBackgroundMusic() {
+        return backgroundMusic;
+    }
+    public static void setBackgroundMusic(Music backgroundMusic) {
+        LoginScreen.backgroundMusic = backgroundMusic;
+    }
+
+
 }

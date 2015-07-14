@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public abstract class Entity extends Actor {
+public abstract class Entity extends Actor implements IEntity {
 
     protected Rectangle bounds;
     protected Texture texture;
@@ -15,8 +15,6 @@ public abstract class Entity extends Actor {
         this.texture = texture;
         bounds = new Rectangle();
     }
-
-    public abstract void update();
 
     public Rectangle getBounds() {
         return new Rectangle(getX(), getY(), getWidth(), getHeight());

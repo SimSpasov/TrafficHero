@@ -10,7 +10,8 @@ import bg.ittalents.traffichero.main.TextureManager;
 
 public class Background extends Actor {
 
-    Texture texture;
+    private Texture texture;
+    private int speed = Constants.BACKGROUND_SPEED;
 
 
     public Background(float yPos) {
@@ -19,10 +20,11 @@ public class Background extends Actor {
     }
 
 
+    //Background movement
     public void update() {
         setY(getY() - Constants.BACKGROUND_SPEED);
-        if (getY() <= -texture.getHeight() / 1.15f) {
-                setY(texture.getHeight() / 1.15f);
+        if (getY() <= -texture.getHeight() / Constants.BACKGROUND_OVERLAP_DIVIDER) {
+                setY(texture.getHeight() / Constants.BACKGROUND_OVERLAP_DIVIDER);
         }
     }
 
@@ -31,5 +33,9 @@ public class Background extends Actor {
             batch.draw(texture, this.getX(), getY(), Gdx.graphics.getWidth(), texture.getHeight());
             update();
 
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
     }
 }

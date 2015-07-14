@@ -1,35 +1,36 @@
 package bg.ittalents.traffichero.main;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
-public class TextFieldManager {
-    private static Label nickname = new Label("", bg.ittalents.traffichero.main.ButtonManager.skin);
+public  class TextFieldManager {
+    private static Label nickname = new Label("", Constants.skin);
 
 
     //TextField for LoginScreen
-    private static TextField usernameLogin = new TextField("", bg.ittalents.traffichero.main.ButtonManager.skin);
-    private static TextField passwordLogin = new TextField("", bg.ittalents.traffichero.main.ButtonManager.skin);
+    private static TextField usernameLogin = new TextField("", Constants.skin);
+    private static TextField passwordLogin = new TextField("", Constants.skin);
 
 
     //TextFields for RegistrationScreen
-    private static TextField createUsernameTextField = new TextField("", bg.ittalents.traffichero.main.ButtonManager.skin);
-    private static TextField createNicknameTextField = new TextField("", bg.ittalents.traffichero.main.ButtonManager.skin);
-    private static TextField emailTextField = new TextField("", bg.ittalents.traffichero.main.ButtonManager.skin);
-    private static TextField createPasswordTextField = new TextField("", bg.ittalents.traffichero.main.ButtonManager.skin);
-    private static TextField repeatPasswordTextField = new TextField("", bg.ittalents.traffichero.main.ButtonManager.skin);
+    private static TextField createUsernameTextField = new TextField("", Constants.skin);
+    private static TextField createNicknameTextField = new TextField("", Constants.skin);
+    private static TextField emailTextField = new TextField("", Constants.skin);
+    private static TextField createPasswordTextField = new TextField("", Constants.skin);
+    private static TextField repeatPasswordTextField = new TextField("", Constants.skin);
 
     //TextFields for UpdatePasswordScreen
-    private static TextField oldPasswordTextField = new TextField("", bg.ittalents.traffichero.main.ButtonManager.skin);
-    private static TextField newPasswordTextField = new TextField("", bg.ittalents.traffichero.main.ButtonManager.skin);
+    private static TextField oldPasswordTextField = new TextField("", Constants.skin);
+    private static TextField newPasswordTextField = new TextField("", Constants.skin);
 
-    private static TextField repeatNewPassword = new TextField("", bg.ittalents.traffichero.main.ButtonManager.skin);
+    private static TextField repeatNewPassword = new TextField("", Constants.skin);
 
 
     //TextFields for ChangeNicknameScreen
-    private static TextField newNicknameTextField = new TextField("", bg.ittalents.traffichero.main.ButtonManager.skin);
-    private static TextField repeatNewNicknameTextField = new TextField("", bg.ittalents.traffichero.main.ButtonManager.skin);
+    private static TextField newNicknameTextField = new TextField("", Constants.skin);
+    private static TextField repeatNewNicknameTextField = new TextField("", Constants.skin);
 
 
 
@@ -77,48 +78,71 @@ public class TextFieldManager {
         return repeatNewPassword;
     }
 
+    public static TextField getNewNicknameTextField() {
+        return newNicknameTextField;
+    }
+
+    public static void setNewNicknameTextField(TextField newNicknameTextField) {
+        TextFieldManager.newNicknameTextField = newNicknameTextField;
+    }
+
+    public static TextField getRepeatNewNicknameTextField() {
+        return repeatNewNicknameTextField;
+    }
+
+    public static void setRepeatNewNicknameTextField(TextField repeatNewNicknameTextField) {
+        TextFieldManager.repeatNewNicknameTextField = repeatNewNicknameTextField;
+    }
+
     //Initialized TextFields for LoginScreen
     //
     public TextField loginScreenTextFields(String textFieldName) {
         if (textFieldName.equals("usernameLogin")) {
             getUsernameLogin().setMessageText("Username");
+            getUsernameLogin().addAction(Actions.alpha(Constants.DEFAULT_ALPHA));
             return getUsernameLogin();
         }
-            getPasswordLogin().setPasswordCharacter('*');
-            getPasswordLogin().setMessageText("Password");
-            getPasswordLogin().isPasswordMode();
-            getPasswordLogin().setPasswordMode(true);
-            return getPasswordLogin();
+        getPasswordLogin().addAction(Actions.alpha(Constants.DEFAULT_ALPHA));
+        getPasswordLogin().setPasswordCharacter('*');
+        getPasswordLogin().setMessageText("Password");
+        getPasswordLogin().isPasswordMode();
+        getPasswordLogin().setPasswordMode(true);
+        return getPasswordLogin();
     }
 
     //Initialized TextField for RegistrationScreen
     //
     public TextField registrationScreenTextFields(String textFieldName) {
-       if(textFieldName.equals("createUsernameTextField")){
-           getCreateUsernameTextField().setMessageText("Username");
-           getCreateUsernameTextField().setColor(Color.BLUE);
-           return getCreateUsernameTextField();
-       }if (textFieldName.equals("createNicknameTextField")){
+        if(textFieldName.equals("createUsernameTextField")){
+            getCreateUsernameTextField().setMessageText("Username");
+//           getCreateUsernameTextField().setColor(Color.BLUE);
+            getCreateUsernameTextField().addAction(Actions.alpha(Constants.DEFAULT_ALPHA));
+            return getCreateUsernameTextField();
+        }if (textFieldName.equals("createNicknameTextField")){
             getCreateNicknameTextField().setMessageText("Nickname");
-            getCreateNicknameTextField().setColor(Color.BLUE);
+//            getCreateNicknameTextField().setColor(Color.BLUE);
+            getCreateNicknameTextField().addAction(Actions.alpha(Constants.DEFAULT_ALPHA));
             return getCreateNicknameTextField();
         }if(textFieldName.equals("createPasswordTextField")){
-            getCreatePasswordTextField().setColor(Color.ORANGE);
+//            getCreatePasswordTextField().setColor(Color.ORANGE);
             getCreatePasswordTextField().setPasswordCharacter('*');
             getCreatePasswordTextField().setMessageText("Password");
             getCreatePasswordTextField().isPasswordMode();
             getCreatePasswordTextField().setPasswordMode(true);
+            getCreatePasswordTextField().addAction(Actions.alpha(Constants.DEFAULT_ALPHA));
             return getCreatePasswordTextField();
         }if (textFieldName.equals("emailTextField")){
-            getEmailTextField().setColor(Color.MAGENTA);
+//            getEmailTextField().setColor(Color.MAGENTA);
             getEmailTextField().setMessageText("Email");
+            getEmailTextField().addAction(Actions.alpha(Constants.DEFAULT_ALPHA));
             return getEmailTextField();
         }
-        getRepeatPasswordTextField().setColor(Color.ORANGE);
+//        getRepeatPasswordTextField().setColor(Color.ORANGE);
         getRepeatPasswordTextField().setPasswordCharacter('*');
         getRepeatPasswordTextField().setMessageText("Repeat Password");
         getRepeatPasswordTextField().isPasswordMode();
         getRepeatPasswordTextField().setPasswordMode(true);
+        getRepeatPasswordTextField().addAction(Actions.alpha(Constants.DEFAULT_ALPHA));
 
         return getRepeatPasswordTextField();
     }
@@ -126,23 +150,23 @@ public class TextFieldManager {
     //Initialized TextField for UpdatePasswordScreen
     //
     public TextField updatePasswordScreenTextFields(String textFieldName) {
-        if (textFieldName.equalsIgnoreCase("old password")) {
-            getOldPasswordTextField().setColor(Color.ORANGE);
+        if (textFieldName.equalsIgnoreCase("oldPasswordTextField")) {
+            getOldPasswordTextField().addAction(Actions.alpha(Constants.DEFAULT_ALPHA));
             getOldPasswordTextField().setPasswordCharacter('*');
-            getOldPasswordTextField().setMessageText("Password");
+            getOldPasswordTextField().setMessageText("Old Password");
             getOldPasswordTextField().isPasswordMode();
             getOldPasswordTextField().setPasswordMode(true);
             return getOldPasswordTextField();
         }
-        if (textFieldName.equals("New Password")) {
-            getNewPasswordTextField().setColor(Color.GRAY);
+        if (textFieldName.equals("newPasswordTextField")) {
+            getNewPasswordTextField().addAction(Actions.alpha(Constants.DEFAULT_ALPHA));
             getNewPasswordTextField().setPasswordCharacter('*');
             getNewPasswordTextField().setMessageText("New Password");
 //            getNewPasswordTextField().isPasswordMode();
             getNewPasswordTextField().setPasswordMode(true);
             return getNewPasswordTextField();
         }
-        getRepeatNewPassword().setColor(Color.GRAY);
+        getRepeatNewPassword().addAction(Actions.alpha(Constants.DEFAULT_ALPHA));
         getRepeatNewPassword().setPasswordCharacter('*');
         getRepeatNewPassword().setMessageText("Repeat Password");
 //        getRepeatPasswordTextField().isPasswordMode();
@@ -151,17 +175,18 @@ public class TextFieldManager {
     }
 
     //Initialized TextField for ChangeNicknameScreen
-    //
+
     public TextField changeNicknameScreenTextFields(String textFieldName){
         if (textFieldName.equalsIgnoreCase("New Nickname")) {
-            newNicknameTextField.setMessageText("new Nickname");
-            return newNicknameTextField;
+            getNewNicknameTextField().setMessageText("new Nickname");
+            getNewNicknameTextField().addAction(Actions.alpha(Constants.DEFAULT_ALPHA));
+            return getNewNicknameTextField();
         }
         if(textFieldName.equals("repeat Nickname"))
-
-            repeatNewNicknameTextField.setMessageText("repeat Nickname");
-            return repeatNewNicknameTextField;
-        }
+            getRepeatNewNicknameTextField().setMessageText("repeat Nickname");
+        getRepeatNewNicknameTextField().addAction(Actions.alpha(Constants.DEFAULT_ALPHA));
+        return getRepeatNewNicknameTextField();
+    }
 
     public void setUsernameInvalidInput(){
         getUsernameLogin().setText("");
@@ -185,20 +210,20 @@ public class TextFieldManager {
     public void setEmalInvalidInput(){
         getEmailTextField().setColor(Color.RED);
         getEmailTextField().setText("");
-        getEmailTextField().setMessageText("must contain > 4 letters\n && '@'");
+        getEmailTextField().setMessageText("must contain > 4 letters && '@'");
     }
     public void setCreatePasswordInvalidInput(){
         getCreatePasswordTextField().setColor(Color.RED);
         getCreatePasswordTextField().setText("");
-        getCreatePasswordTextField().setMessageText("must contain > 4 letters\nor passwords doesn't match");
+        getCreatePasswordTextField().setMessageText("must contain > 4 letters or\n passwords doesn't match");
     }
     public void setRepeatPasswordInvalidInput(){
         getRepeatPasswordTextField().setColor(Color.RED);
         getRepeatPasswordTextField().setText("");
-        getRepeatPasswordTextField().setMessageText("must contain > 4 letters\nor passwords doesn't match");
+        getRepeatPasswordTextField().setMessageText("must contain > 4 letters or\n passwords doesn't match");
     }
     public void setOldPasswordInvalidInput(){
-       getOldPasswordTextField().setColor(Color.RED);
+        getOldPasswordTextField().setColor(Color.RED);
         getOldPasswordTextField().setText("");
         getOldPasswordTextField().setMessageText("Passwords doesn't match");
     }

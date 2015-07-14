@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import bg.ittalents.traffichero.TrafficGame;
+import bg.ittalents.traffichero.main.TrafficGame;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override

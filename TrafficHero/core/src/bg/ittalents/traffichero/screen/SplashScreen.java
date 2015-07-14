@@ -11,73 +11,77 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
+
+import bg.ittalents.traffichero.main.Constants;
 
 public class SplashScreen implements Screen {
-  private Stage stage = new Stage(new StretchViewport(480f,800f));
-  private Image img;
-  private Label heading;
- private BitmapFont black;
-
-// Sound sound ;
- @Override
- public void render(float delta) {
-  Gdx.gl.glClearColor(1,1,1,1);
-  Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-  stage.act(delta);
-  stage.draw();
-
- }
-
- @Override
- public void resize(int width, int height) {
-
- }
-
- @Override
- public void show() {
+    private Stage stage = new Stage();
+    private Image img;
+    private Label heading;
+    private BitmapFont black;
+    private Texture splashTexture;
 
 
-  black = new BitmapFont(Gdx.files.internal("fonts/black.fnt"),false);
+    // Sound sound ;
+    @Override
+    public void render(float delta) {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        stage.act(delta);
+        stage.draw();
 
-  Label.LabelStyle headingStyle = new Label.LabelStyle(black, Color.GREEN);
+    }
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void show() {
 
 
-  heading = new Label("ANDROID",headingStyle);
-  heading.setPosition(Gdx.graphics.getWidth() / 2 - heading.getWidth()/2,20);
-  Texture splashTexture = new Texture("androidwhite.png");
-  img = new Image(splashTexture);
-  img.setPosition(Gdx.graphics.getWidth() / 2 - splashTexture.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-  img.addAction(Actions.sequence(Actions.parallel(Actions.rotateBy(2f, 0.08f)), Actions.rotateBy(-4, 0.15f),
-          Actions.rotateBy(4, 0.15f), Actions.rotateBy(-4, 0.15f), Actions.rotateBy(2f, 0.08f), Actions.fadeOut(1),
-          Actions.run(new Runnable() {
-           @Override
-           public void run() {
-            ((Game) Gdx.app.getApplicationListener()).setScreen(new LoginScreen());
-           }
-          })));
+        black = new BitmapFont(Gdx.files.internal("fonts/black.fnt"), false);
 
-  stage.addActor(heading);
+        Label.LabelStyle headingStyle = new Label.LabelStyle(black, Color.GREEN);
 
-  stage.addActor(img);
- }
 
- @Override
- public void hide() {
-  dispose();
- }
+        heading = new Label("ANDROID", headingStyle);
+        heading.setPosition(Gdx.graphics.getWidth() / 2 - heading.getWidth() / 2, 20);
+        splashTexture = new Texture("android-splash.jpg");
+        img = new Image(splashTexture);
+        img.setPosition(0, 0);
+        img.setSize(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+        img.setOrigin(img.getWidth()/ 2, img.getWidth() / 2);
+        img.addAction(Actions.sequence(Actions.rotateBy(-5f, 0.05f), Actions.rotateBy(10f, 0.10f), Actions.rotateBy(-5f, 0.05f),
+                Actions.rotateBy(-5f, 0.05f), Actions.rotateBy(10f, 0.10f), Actions.rotateBy(-5f, 0.05f), Actions.fadeOut(1.0f), Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((Game)Gdx.app.getApplicationListener()).setScreen(new LoginScreen());
+                    }
+                })));
 
- @Override
- public void pause() {
- }
+        stage.addActor(heading);
 
- @Override
- public void resume() {
- }
+        stage.addActor(img);
+    }
 
- @Override
- public void dispose() {
-  stage.dispose();
- }
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void resume() {
+    }
+
+    @Override
+    public void dispose() {
+
+    }
 
 }

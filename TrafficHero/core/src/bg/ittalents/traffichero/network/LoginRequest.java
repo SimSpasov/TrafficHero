@@ -9,7 +9,11 @@ import com.badlogic.gdx.net.HttpStatus;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import bg.ittalents.traffichero.main.TextFieldManager;
 import bg.ittalents.traffichero.screen.GameScreen;
+import bg.ittalents.traffichero.screen.LoginScreen;
+import bg.ittalents.traffichero.screen.MainScreen;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,20 +53,31 @@ public class LoginRequest {
                 int highscore = obj.get("highscore").getAsInt();
                 int money = obj.get("money").getAsInt();
                 int maxLevel = obj.get("maxlevel").getAsInt();
-                User user = new User(id, nickname, highscore, money, maxLevel);
-                Gdx.app.log("USER TAG", "USER: " + user);
+                User.makeSingletonUser(id, nickname, highscore, money, maxLevel);
                 Gdx.app.postRunnable(new Runnable() {
                     @Override
                     public void run() {
-                        ((Game)Gdx.app.getApplicationListener()).setScreen(new GameScreen());
+                        MainScreen.greetingLabel.setText("Welcome " + User.getSingletonUser().getNickname());
+                                ((Game) Gdx.app.getApplicationListener()).setScreen(new MainScreen());
                     }
                 });
+            }
+            if (statusCode == 302) {
+                LoginScreen.statusLabel.setText("Username doesn't exist");
+            }
+            if (statusCode == 401) {
+                LoginScreen.statusLabel.setText("Invalid password");
             }
         }
 
         @Override
         public void failed(Throwable t) {
-
+            Gdx.app.postRunnable(new Runnable() {
+                @Override
+                public void run() {
+                    LoginScreen.statusLabel.setText("Connection timeout!");
+                }
+            });
         }
 
         @Override
